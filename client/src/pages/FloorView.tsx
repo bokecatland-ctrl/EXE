@@ -15,7 +15,7 @@ export default function FloorView() {
   async function handleConfirm(status: SeatStatus, notes: string) {
     if (!selected) return;
     const updated = await patchSeat(selected.id, status, { notes });
-    dispatch({ type: 'UPDATE_SEAT', seat: updated });
+    dispatch({ type: 'UPDATE_SEAT', patch: updated });
     setSelected(null);
   }
 

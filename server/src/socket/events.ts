@@ -24,6 +24,8 @@ export function emitSeatChanged(seat: Seat) {
     changedBy: seat.updated_by,
     changedAt: seat.updated_at,
     occupiedSince: seat.occupied_since,
+    zoneId: seat.zone_id,
+    zoneName: seat.zone_name,
   });
 }
 

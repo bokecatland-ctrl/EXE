@@ -49,6 +49,7 @@ export function SeatsProvider({ children }: { children: React.ReactNode }) {
       seatId: number; label: string; status: Seat['status'];
       notes: string | null; changedBy: string | null;
       changedAt: string; occupiedSince: string | null;
+      zoneId: number | null; zoneName: string | null;
     }) => {
       dispatch({
         type: 'UPDATE_SEAT',
@@ -60,6 +61,8 @@ export function SeatsProvider({ children }: { children: React.ReactNode }) {
           occupied_since: payload.occupiedSince,
           updated_at: payload.changedAt,
           updated_by: payload.changedBy,
+          zone_id: payload.zoneId,
+          zone_name: payload.zoneName,
         },
       });
     });
