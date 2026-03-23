@@ -1,7 +1,6 @@
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import fastifyCors from '@fastify/cors';
-import { createServer } from 'http';
 import { Server as SocketServer } from 'socket.io';
 import path from 'path';
 import fs from 'fs';
@@ -14,9 +13,9 @@ const PORT = Number(process.env.PORT) || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 
 const app = Fastify({ logger: { level: 'info' } });
-const httpServer = createServer(app.server);
 
-const io = new SocketServer(httpServer, {
+// Attach Socket.IO directly to Fastify's underlying HTTP server
+const io = new SocketServer(app.server, {
   cors: { origin: '*' },
 });
 initSocket(io);
@@ -42,7 +41,7 @@ app.register(seatsRoutes, { prefix: '/api/seats' });
 app.register(layoutRoutes, { prefix: '/api/layout' });
 app.register(statsRoutes, { prefix: '/api/stats' });
 
-// Start — use raw httpServer so Socket.IO shares the port
-httpServer.listen(PORT, HOST, () => {
+// Start Fastify (Socket.IO shares the same server)
+app.listen({ port: PORT, host: HOST }).then(() => {
   console.log(`EXE Lounge server running on http://${HOST}:${PORT}`);
 });
