@@ -5,7 +5,7 @@ import { getSocket } from '../api/socket';
 
 type Action =
   | { type: 'SYNC_ALL'; seats: Seat[] }
-  | { type: 'UPDATE_SEAT'; seat: Seat }
+  | { type: 'UPDATE_SEAT'; patch: Partial<Seat> & { id: number } }
   | { type: 'BULK_UPDATED'; seats: Seat[] };
 
 function reducer(state: Seat[], action: Action): Seat[] {
@@ -13,7 +13,7 @@ function reducer(state: Seat[], action: Action): Seat[] {
     case 'SYNC_ALL':
       return action.seats;
     case 'UPDATE_SEAT':
-      return state.map((s) => (s.id === action.seat.id ? action.seat : s));
+      return state.map((s) => (s.id === action.patch.id ? { ...s, ...action.patch } : s));
     case 'BULK_UPDATED':
       return action.seats;
     default:
@@ -52,7 +52,7 @@ export function SeatsProvider({ children }: { children: React.ReactNode }) {
     }) => {
       dispatch({
         type: 'UPDATE_SEAT',
-        seat: {
+        patch: {
           id: payload.seatId,
           label: payload.label,
           status: payload.status,
@@ -60,7 +60,7 @@ export function SeatsProvider({ children }: { children: React.ReactNode }) {
           occupied_since: payload.occupiedSince,
           updated_at: payload.changedAt,
           updated_by: payload.changedBy,
-        } as Seat,
+        },
       });
     });
 
